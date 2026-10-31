@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:kindle="http://kindle.amazon.com/ns/widget-extensions"
+    id="com.lab126.helpapp" version="1.0" viewmodes="application">
+
+    <content src="index.html" />
+
+    <kindle:gestures>
+        <kindle:param name="swipe" value="yes"/>
+        <kindle:param name="tap" value="yes"/>
+    </kindle:gestures>
+
+    <kindle:network>
+        <kindle:asset key="user-agent" value="Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like 
+Gecko) Chrome/120.0 Safari/537.36" />
+        <kindle:errorPage src="connectivity_error.html" />
+    </kindle:network>
+
+    <kindle:messaging>
+        <kindle:app name="com.lab126.chromebar" value="yes" />
+    </kindle:messaging>
+
+    <feature name="http://kindle.amazon.com/apis" required="true">
+        <param name="appmgr" value="yes" />
+        <param name="net" value="yes" />
+        <param name="gestures" value="yes" />
+        <param name="chrome" value="yes" />
+        <param name="dev" value="yes" />
+        <param name="device" value="yes" />
+        <param name="download" value="yes" />
+        <param name="messaging" value="yes" />
+        <param name="viewport" value="yes" />
+        <param name="popup" value="yes" />
+        <param name="uitest" value="yes" />
+        <param name="systemEventing" value="yes"/>
+        <param name="dconfig" value="yes"/>
+    </feature>
+
+    <kindle:settings>
+        <kindle:setting name="saveContext" value="no"/>
+    </kindle:settings>
+</widget>
