@@ -6,3 +6,7 @@ Just download source code and put it on your kindle. WAFs are loaded through the
 Note: It doesnt support more than one WAF. 
 
 Basically, it mounts the WAF folder where the help app WAF is and then launches the help app, then when the help app closes it unmounts the custom WAF folder.
+
+> I said I had a rented truck. I never said I rented a truck. Someone with a credit card ending in 3939 rented it, technically.
+>
+> \- Veronica Dineen, *Scorpion*
