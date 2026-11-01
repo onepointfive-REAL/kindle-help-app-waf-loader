@@ -1,26 +1,42 @@
 #!/bin/sh
 # Name: Help App WAF Loader
 # Author: onepointfive-REAL (github)
+
 WAF_DIR=/mnt/us/waf
 HELP_DIR=/var/local/mesquite/help
-TITLE='WAF'
+ERROR_TITLE='Error'
+ERROR_TEXT='Failed to load WAF'
 
-if [ ! -f "$WAF_DIR/index.html" ]; then
-    echo "No index.html in $WAF_DIR" >&2
+ERROR_URL=$(printf '%s' "$ERROR_TEXT" | sed 's/ /%20/g')
+ERROR_ARGUMENTS="app://com.lab126.helpapp?%7B%22title%22%3A%22$ERROR_TITLE%22%2C%22url%22%3A%22data%3Atext%2Fhtml%2C%3Ch1%3E$ERROR_URL%3C%2Fh1%3E%22%7D"
+
+if [ ! -f "$WAF_DIR/config.xml" ]; then
+    echo "No config.xml in $WAF_DIR" >&2
+    lipc-set-prop com.lab126.appmgrd start "$ERROR_ARGUMENTS"
     exit 1
 fi
 
 mount | grep -q "on $HELP_DIR " && umount "$HELP_DIR"
-mount --bind "$WAF_DIR" "$HELP_DIR" || exit 1
+mount --bind "$WAF_DIR" "$HELP_DIR" || {
+    lipc-set-prop com.lab126.appmgrd start "$ERROR_ARGUMENTS"
+    exit 1
+}
 
-lipc-set-prop com.lab126.appmgrd start "app://com.lab126.helpapp?%7B%22title%22%3A%22$TITLE%22%7D"
+# If the old help app somehow falls back, use that to our advantage and show error text 
+lipc-set-prop com.lab126.appmgrd start "$ERROR_ARGUMENTS"
 
 (
-    sleep 3
-    while [ "$(lipc-get-prop com.lab126.appmgrd activeApp)" = "com.lab126.helpapp" ]; do
+    while [ "$(lipc-get-prop com.lab126.appmgrd activeApp)" != "com.lab126.helpapp" ]
+    do
         sleep 1
     done
-    umount "$HELP_DIR" 2>/dev/null
-) >/dev/null 2>&1 &
+
+    while [ "$(lipc-get-prop com.lab126.appmgrd activeApp)" = "com.lab126.helpapp" ]
+    do
+        sleep 1
+    done
+
+    umount "$HELP_DIR"
+) &
 
 exit 0
